@@ -1,0 +1,156 @@
+﻿Building Windows application...                                 
+flutter : lib/presentat
+ion/auth/login_screen.d
+art(57,33): error 
+G75B77105: Member not 
+found: 
+'obsidianBlack'. [C:\Us
+ers\Administrator\Deskt
+op\Keuangan\keuangan_mo
+bile\build\windows\x64\
+flutter\flutter_assembl
+e.vcxproj]
+At line:1 char:1
++ flutter build 
+windows > 
+build_log.txt 2>&1
++ ~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo     
+         : NotSpecifi  
+  ed: (lib/presentat   
+ io...semble.vcxpro    
+j]:String) [], Rem    
+oteException
+    + FullyQualifiedEr 
+   rorId : NativeComm  
+  andError
+ 
+lib/presentation/auth/l
+ogin_screen.dart(69,35)
+: error G75B77105: 
+Member not found: 
+'emeraldGreen'. [C:\Use
+rs\Administrator\Deskto
+p\Keuangan\keuangan_mob
+ile\build\windows\x64\f
+lutter\flutter_assemble
+.vcxproj]
+lib/presentation/auth/l
+ogin_screen.dart(87,37)
+: error G75B77105: 
+Member not found: 
+'textSecondary'. [C:\Us
+ers\Administrator\Deskt
+op\Keuangan\keuangan_mo
+bile\build\windows\x64\
+flutter\flutter_assembl
+e.vcxproj]
+lib/presentation/auth/l
+ogin_screen.dart(96,39)
+: error G75B77105: 
+Member not found: 
+'crimsonRed'. [C:\Users
+\Administrator\Desktop\
+Keuangan\keuangan_mobil
+e\build\windows\x64\flu
+tter\flutter_assemble.v
+cxproj]
+lib/presentation/auth/l
+ogin_screen.dart(98,58)
+: error G75B77105: 
+Member not found: 
+'crimsonRed'. [C:\Users
+\Administrator\Desktop\
+Keuangan\keuangan_mobil
+e\build\windows\x64\flu
+tter\flutter_assemble.v
+cxproj]
+lib/presentation/auth/l
+ogin_screen.dart(102,62
+): error G75B77105: 
+Member not found: 
+'crimsonRed'. [C:\Users
+\Administrator\Desktop\
+Keuangan\keuangan_mobil
+e\build\windows\x64\flu
+tter\flutter_assemble.v
+cxproj]
+lib/presentation/auth/l
+ogin_screen.dart(110,76
+): error G75B77105: 
+Member not found: 
+'textSecondary'. [C:\Us
+ers\Administrator\Deskt
+op\Keuangan\keuangan_mo
+bile\build\windows\x64\
+flutter\flutter_assembl
+e.vcxproj]
+lib/presentation/auth/l
+ogin_screen.dart(120,74
+): error G75B77105: 
+Member not found: 
+'textSecondary'. [C:\Us
+ers\Administrator\Deskt
+op\Keuangan\keuangan_mo
+bile\build\windows\x64\
+flutter\flutter_assembl
+e.vcxproj]
+lib/presentation/auth/l
+ogin_screen.dart(131,49
+): error G75B77105: 
+Member not found: 
+'emeraldGreen'. [C:\Use
+rs\Administrator\Deskto
+p\Keuangan\keuangan_mob
+ile\build\windows\x64\f
+lutter\flutter_assemble
+.vcxproj]
+lib/presentation/auth/l
+ogin_screen.dart(132,49
+): error G75B77105: 
+Member not found: 
+'obsidianBlack'. [C:\Us
+ers\Administrator\Deskt
+op\Keuangan\keuangan_mo
+bile\build\windows\x64\
+flutter\flutter_assembl
+e.vcxproj]
+lib/presentation/auth/l
+ogin_screen.dart(143,47
+): error G75B77105: 
+Member not found: 
+'obsidianBlack'. [C:\Us
+ers\Administrator\Deskt
+op\Keuangan\keuangan_mo
+bile\build\windows\x64\
+flutter\flutter_assembl
+e.vcxproj]
+C:\Program Files 
+(x86)\Microsoft Visual 
+Studio\2022\BuildTools\
+MSBuild\Microsoft\VC\v1
+70\Microsoft.CppCommon.
+targets(254,5): error 
+MSB8066: Custom build 
+for 'C:\Users\Administr
+ator\Desktop\Keuangan\k
+euangan_mobile\build\wi
+ndows\x64\CMakeFiles\51
+d4bbf32e0d92a02bd73ee6c
+6207955\flutter_windows
+.dll.rule;C:\Users\Admi
+nistrator\Desktop\Keuan
+gan\keuangan_mobile\bui
+ld\windows\x64\CMakeFil
+es\c3ebb11579cea3887dda
+e44a1d674811\flutter_as
+semble.rule' exited 
+with code 1. [C:\Users\
+Administrator\Desktop\K
+euangan\keuangan_mobile
+\build\windows\x64\flut
+ter\flutter_assemble.vc
+xproj]
+Building Windows application...                                    11.3s
+Build process failed.

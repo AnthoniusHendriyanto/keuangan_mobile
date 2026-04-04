@@ -2,141 +2,153 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../core/theme/colors.dart';
-import '../../data/repositories/mock_dashboard_repository.dart';
-import '../../domain/entities/transaction.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../domain/providers/transaction_provider.dart';
+import '../../data/models/transaction.dart';
 
-class DashboardScreen extends StatefulWidget {
+class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
 
   @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final transactionsAsync = ref.watch(transactionsProvider);
+    final trueLiability = ref.watch(trueLiabilityProvider);
+    final currencyFormatter = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
 
-class _DashboardScreenState extends State<DashboardScreen> {
-  final _repo = MockDashboardRepository();
+    String formatIDR(int amount) {
+      return currencyFormatter.format(amount).replaceAll(',', '_').replaceAll('.', ',').replaceAll('_', '.');
+    }
 
-  final currencyFormatter = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: FutureBuilder(
-        future: Future.wait([
-          _repo.getNetBalance(),
-          _repo.getCurrentLiabilities(),
-          _repo.getMonthlyBurn(),
-          _repo.getRecentTransactions(),
-        ]),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(color: AppColors.primary));
-          }
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
-
-          final data = snapshot.data as List<dynamic>;
-          final int netBalance = data[0] as int;
-          final int liabilities = data[1] as int;
-          final int monthlyBurn = data[2] as int;
-          final List<TransactionEntity> transactions = data[3] as List<TransactionEntity>;
-
+      body: transactionsAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator(color: AppColors.primary)),
+        error: (err, stack) => Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.error_outline, color: AppColors.secondary, size: 48),
+              const SizedBox(height: 16),
+              Text('Failed to sync: $err', textAlign: TextAlign.center),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () => ref.refresh(transactionsProvider),
+                child: const Text('Retry'),
+              ),
+            ],
+          ),
+        ),
+        data: (transactions) {
           return Stack(
             children: [
-              CustomScrollView(
-                slivers: [
-                  SliverToBoxAdapter(child: SizedBox(height: MediaQuery.of(context).padding.top + 32)),
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("True Liability", style: Theme.of(context).textTheme.headlineMedium),
-                          const SizedBox(height: 8),
-                          Text(
-                            currencyFormatter.format(netBalance).replaceAll(',','_').replaceAll('.',',').replaceAll('_','.'), // Simple format to Rp 15.000.000
-                            style: Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 40),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            "Verified by 3 linked accounts",
-                            style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                                  color: AppColors.onSurfaceVariant,
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SliverToBoxAdapter(child: SizedBox(height: 40)),
-                  // Liability Cards
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: _buildMetricCard(
-                              context: context,
-                              title: "Current Liabilities",
-                              value: currencyFormatter.format(liabilities).replaceAll(',','_').replaceAll('.',',').replaceAll('_','.'),
-                              valueColor: AppColors.secondary,
+              RefreshIndicator(
+                onRefresh: () async => ref.refresh(transactionsProvider),
+                color: AppColors.primary,
+                backgroundColor: AppColors.surfaceVariant,
+                child: CustomScrollView(
+                  slivers: [
+                    SliverToBoxAdapter(child: SizedBox(height: MediaQuery.of(context).padding.top + 32)),
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("True Liability", style: Theme.of(context).textTheme.headlineMedium),
+                            const SizedBox(height: 8),
+                            Text(
+                              formatIDR(trueLiability),
+                              style: Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 40),
                             ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              children: [
-                                _buildMetricCard(
-                                  context: context,
-                                  title: "Monthly Burn",
-                                  value: "Rp ${(monthlyBurn / 1000000).toStringAsFixed(1)}M",
-                                  valueColor: AppColors.onSurface,
-                                ),
-                                const SizedBox(height: 16),
-                                _buildMetricCard(
-                                  context: context,
-                                  title: "Credit Score",
-                                  value: "782",
-                                  subtitle: " +12",
-                                  subtitleColor: AppColors.primary,
-                                  valueColor: AppColors.onSurface,
-                                ),
-                              ],
+                            const SizedBox(height: 4),
+                            Text(
+                              "Verified transactions in PENDING state",
+                              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                                    color: AppColors.onSurfaceVariant,
+                                  ),
                             ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SliverToBoxAdapter(child: SizedBox(height: 40)),
+                    // Liability Cards
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: _buildMetricCard(
+                                context: context,
+                                title: "Current Liabilities",
+                                value: formatIDR(trueLiability),
+                                valueColor: AppColors.secondary,
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  _buildMetricCard(
+                                    context: context,
+                                    title: "Total Records",
+                                    value: "${transactions.length}",
+                                    valueColor: AppColors.onSurface,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  _buildMetricCard(
+                                    context: context,
+                                    title: "Status",
+                                    value: "Live",
+                                    subtitle: " Connected",
+                                    subtitleColor: AppColors.primary,
+                                    valueColor: AppColors.onSurface,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SliverToBoxAdapter(child: SizedBox(height: 40)),
+                    // Recent Activity
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: Text(
+                          "Recent Activity",
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                      ),
+                    ),
+                    const SliverToBoxAdapter(child: SizedBox(height: 16)),
+                    if (transactions.isEmpty)
+                      const SliverToBoxAdapter(
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(40.0),
+                            child: Text("No transactions found.", style: TextStyle(color: AppColors.onSurfaceVariant)),
                           ),
-                        ],
+                        ),
+                      )
+                    else
+                      SliverPadding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        sliver: SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              final tx = transactions[index];
+                              return _buildTransactionItem(context, tx, formatIDR);
+                            },
+                            childCount: transactions.length,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  const SliverToBoxAdapter(child: SizedBox(height: 40)),
-                  // Recent Activity
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                      child: Text(
-                        "Recent Activity",
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                    ),
-                  ),
-                  const SliverToBoxAdapter(child: SizedBox(height: 16)),
-                  SliverPadding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    sliver: SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          final tx = transactions[index];
-                          return _buildTransactionItem(context, tx);
-                        },
-                        childCount: transactions.length,
-                      ),
-                    ),
-                  ),
-                  const SliverToBoxAdapter(child: SizedBox(height: 120)), // Space for bottom nav
-                ],
+                    const SliverToBoxAdapter(child: SizedBox(height: 120)), // Space for bottom nav
+                  ],
+                ),
               ),
               // Bottom Nav Bar (Glassmorphic)
               Positioned(
@@ -214,10 +226,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildTransactionItem(BuildContext context, TransactionEntity tx) {
-    final isNegative = tx.amountIdr < 0;
-    final displayAmount = (isNegative ? "- " : "+ ") + currencyFormatter.format(tx.amountIdr.abs()).replaceAll(',','_').replaceAll('.',',').replaceAll('_','.');
-    final amountColor = isNegative ? AppColors.secondary : AppColors.primary;
+  Widget _buildTransactionItem(BuildContext context, Transaction tx, String Function(int) formatIDR) {
+    final displayAmount = "- ${formatIDR(tx.amountIdr.abs())}"; // Mock as all debit/liability
+    const amountColor = AppColors.secondary;
     
     return Container(
       margin: const EdgeInsets.only(bottom: 8.0),

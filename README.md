@@ -1,17 +1,45 @@
-# keuangan_mobile
+# True Liability Tracker (Mobile)
 
-A new Flutter project.
+A premium, high-performance Flutter application for tracking automated credit card liabilities and manual spending. Built with an **Obsidian Sanctuary** dark-mode design system.
 
-## Getting Started
+## 🚀 Key Features
 
-This project is a starting point for a Flutter application.
+- **Obsidian Sanctuary UI**: A custom, high-contrast dark theme using emerald green accents and glassmorphism.
+- **Supabase Native Auth**: Securely authenticates users via Supabase GoTrue.
+- **Live Sync**: Real-time transaction fetching from the Golang backend using Riverpod state management.
+- **True Liability Logic**: Automatically calculates actual debt by filtering for `PENDING` transactions across all linked accounts.
 
-A few resources to get you started if this is your first Flutter project:
+## 🛠 Tech Stack
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+- **Framework**: Flutter (Dart)
+- **State Management**: `flutter_riverpod`
+- **Backend Communication**: REST API via `http` (targeting `localhost:8080`)
+- **Authentication**: `supabase_flutter`
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🏗 Architecture (Clean Architecture)
+
+- **`lib/core/`**: Shared themes, colors, and network clients (`ApiClient`).
+- **`lib/data/`**: JSON models and API repositories.
+- **`lib/domain/`**: Business logic and Riverpod providers.
+- **`lib/presentation/`**: Pixel-perfect UI layers (Dashboard, Auth).
+
+## 🚦 Getting Started
+
+### 1. Backend Setup
+Ensure the **Keuangan Backend** (Golang) is running on port `8080`.
+```bash
+go run ./cmd/server/main.go
+```
+
+### 2. Emulator Connectivity
+If running on an **Android Emulator**, the API client is configured to use `10.0.2.2:8080` to reach your host machine's localhost.
+
+### 3. Run the App
+```bash
+flutter pub get
+flutter run
+```
+
+---
+
+*Note: This application requires a valid Supabase project with transactional liability tables initialized.*

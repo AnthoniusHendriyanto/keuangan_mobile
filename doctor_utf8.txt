@@ -1,0 +1,37 @@
+﻿[ΓêÜ] Flutter (Channel stable, 3.41.5, on Microsoft Windows [Version 10.0.22621.4317], locale en-US) [440ms]
+    ΓÇó Flutter version 3.41.5 on channel stable at C:\src\flutter
+    ΓÇó Upstream repository https://github.com/flutter/flutter.git
+    ΓÇó Framework revision 2c9eb20739 (9 days ago), 2026-03-17 16:14:01 -0700
+    ΓÇó Engine revision 052f31d115
+    ΓÇó Dart version 3.11.3
+    ΓÇó DevTools version 2.54.2
+    ΓÇó Feature flags: enable-web, enable-linux-desktop, enable-macos-desktop, enable-windows-desktop, enable-android, enable-ios, cli-animations, enable-native-assets, omit-legacy-version-file, enable-lldb-debugging, enable-uiscene-migration
+
+[ΓêÜ] Windows Version (11 Pro 64-bit, 22H2, 2009) [654ms]
+
+[X] Android toolchain - develop for Android devices [186ms]
+    X Unable to locate Android SDK.
+      Install Android Studio from: https://developer.android.com/studio/index.html
+      On first launch it will assist you in installing the Android SDK components.
+      (or visit https://flutter.dev/to/windows-android-setup for detailed instructions).
+      If the Android SDK has been installed to a custom location, please use
+      `flutter config --android-sdk` to update to that location.
+
+
+[ΓêÜ] Chrome - develop for the web [177ms]
+    ΓÇó Chrome at C:\Program Files\Google\Chrome\Application\chrome.exe
+
+[ΓêÜ] Visual Studio - develop Windows apps (Visual Studio Build Tools 2022 17.14.25 (January 2026)) [176ms]
+    ΓÇó Visual Studio at C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools
+    ΓÇó Visual Studio Build Tools 2022 version 17.14.36915.13
+    ΓÇó Windows 10 SDK version 10.0.26100.0
+
+[ΓêÜ] Connected device (3 available) [66ms]
+    ΓÇó Windows (desktop) ΓÇó windows ΓÇó windows-x64    ΓÇó Microsoft Windows [Version 10.0.22621.4317]
+    ΓÇó Chrome (web)      ΓÇó chrome  ΓÇó web-javascript ΓÇó Google Chrome 146.0.7680.165
+    ΓÇó Edge (web)        ΓÇó edge    ΓÇó web-javascript ΓÇó Microsoft Edge 146.0.3856.72
+
+[ΓêÜ] Network resources [344ms]
+    ΓÇó All expected network resources are available.
+
+! Doctor found issues in 1 category.

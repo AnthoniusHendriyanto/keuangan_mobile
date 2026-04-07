@@ -1,4 +1,4 @@
-import 'dart:io';
+
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -9,7 +9,7 @@ const _kTokenKey = 'auth_access_token';
 
 class ApiClient {
   static String get baseUrl {
-    if (!kIsWeb && Platform.isAndroid) {
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
       return 'http://10.0.2.2:8080/v1';
     }
     return 'http://localhost:8080/v1';

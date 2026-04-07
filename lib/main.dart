@@ -3,17 +3,11 @@ import 'core/theme/app_theme.dart';
 import 'presentation/dashboard/dashboard_screen.dart';
 import 'presentation/auth/login_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'core/network/api_client.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  await Supabase.initialize(
-    url: 'https://tlcfjcuudswmgqfpcmzr.supabase.co',
-    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRsY2ZqY3V1ZHN3bWdxZnBjbXpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQzNjIxNTcsImV4cCI6MjA4OTkzODE1N30.TLxkUebisW04DPBUT9x4MYheKIEdEaXoPtAgNcm6Xbo',
-  );
-
   runApp(
     const ProviderScope(
       child: TrueLiabilityApp(),
@@ -43,20 +37,31 @@ class AuthWrapper extends StatefulWidget {
 }
 
 class _AuthWrapperState extends State<AuthWrapper> {
+  late Future<String?> _tokenFuture;
+
   @override
   void initState() {
     super.initState();
-    Supabase.instance.client.auth.onAuthStateChange.listen((data) {
-      if (mounted) setState(() {});
-    });
+    _tokenFuture = ApiClient().getToken();
   }
 
   @override
   Widget build(BuildContext context) {
-    final session = Supabase.instance.client.auth.currentSession;
-    if (session == null) {
-      return const LoginScreen();
-    }
-    return const DashboardScreen();
+    return FutureBuilder<String?>(
+      future: _tokenFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        
+        final hasToken = snapshot.data != null && snapshot.data!.isNotEmpty;
+        if (!hasToken) {
+          return const LoginScreen();
+        }
+        return const DashboardScreen();
+      },
+    );
   }
 }

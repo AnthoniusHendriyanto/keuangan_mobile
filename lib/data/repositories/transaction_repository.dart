@@ -12,7 +12,10 @@ class TransactionRepository {
     final response = await _apiClient.get('/transactions/');
     
     if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);
+      final dynamic body = jsonDecode(response.body);
+      final List<dynamic> data = (body is Map && body.containsKey('data')) 
+          ? body['data'] as List<dynamic> 
+          : body as List<dynamic>;
       return data.map((json) => Transaction.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load transactions: ${response.statusCode} - ${response.body}');

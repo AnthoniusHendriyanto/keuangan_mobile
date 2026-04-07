@@ -2,6 +2,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../core/theme/colors.dart';
+import '../../core/network/api_client.dart';
+import '../../presentation/auth/login_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/providers/transaction_provider.dart';
 import '../../data/models/transaction.dart';
@@ -168,10 +170,10 @@ class DashboardScreen extends ConsumerWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          _buildNavItem(Icons.dashboard_rounded, true),
-                          _buildNavItem(Icons.receipt_long_rounded, false),
-                          _buildNavItem(Icons.bar_chart_rounded, false),
-                          _buildNavItem(Icons.settings_rounded, false),
+                          _buildNavItem(Icons.dashboard_rounded, true, null),
+                          _buildNavItem(Icons.receipt_long_rounded, false, null),
+                          _buildNavItem(Icons.bar_chart_rounded, false, null),
+                          _buildLogoutItem(context),
                         ],
                       ),
                     ),
@@ -271,14 +273,47 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildNavItem(IconData icon, bool isActive) {
+  Widget _buildNavItem(IconData icon, bool isActive, VoidCallback? onTap) {
     return IconButton(
       icon: Icon(
         icon,
         color: isActive ? AppColors.primary : AppColors.onSurfaceVariant,
         size: 28,
       ),
-      onPressed: () {},
+      onPressed: onTap ?? () {},
+    );
+  }
+
+  Widget _buildLogoutItem(BuildContext context) {
+    return IconButton(
+      tooltip: 'Logout',
+      icon: const Icon(
+        Icons.logout_rounded,
+        color: AppColors.secondary,
+        size: 26,
+      ),
+      onPressed: () async {
+        final messenger = ScaffoldMessenger.of(context);
+        final navigator = Navigator.of(context);
+
+        await ApiClient().clearToken();
+
+        messenger.showSnackBar(
+          SnackBar(
+            content: const Text('Signed out successfully.'),
+            backgroundColor: AppColors.surfaceContainerHigh,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        );
+
+        navigator.pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => const LoginScreen()),
+          (route) => false,
+        );
+      },
     );
   }
 }

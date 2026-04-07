@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'core/theme/app_theme.dart';
-import 'presentation/dashboard/dashboard_screen.dart';
+import 'presentation/dashboard/main_screen.dart';
 import 'presentation/auth/login_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/network/api_client.dart';
@@ -60,7 +60,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
         if (!hasToken) {
           return const LoginScreen();
         }
-        return const DashboardScreen();
+        return const MainScreen();
       },
     );
   }

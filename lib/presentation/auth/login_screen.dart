@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/network/api_client.dart';
 import '../../core/theme/colors.dart';
+import '../dashboard/main_screen.dart';
 import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -34,8 +35,13 @@ class _LoginScreenState extends State<LoginScreen> {
         setState(() {
           _errorMessage = result['message'] as String? ?? 'Authentication failed.';
         });
+      } else {
+        if (mounted) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (_) => const MainScreen()),
+          );
+        }
       }
-      // On success, main.dart AuthWrapper will detect the stored token and redirect.
     } catch (e) {
       setState(() {
         _errorMessage = 'An unexpected error occurred. Please try again.';
